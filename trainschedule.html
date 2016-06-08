@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>train schedule</title>
+
+	<link rel="stylesheet" type="text/css" href="assets/css/style.css">
+
+</head>
+<body>
+<div id="container">
+	<header>
+		<h1>Train Schedule</h1>
+		<h2>this will say something else</h2>
+		<h3 id= timeRightNow></h3>
+	</header>
+	<div id="displayBox">
+		<table id="trainTable">
+			<tr>
+				<th>Train Name</th>
+				<th>Destination</th>
+				<th>Frequency (Min)</th>
+				<th>Next Arrival</th>
+				<th>Minutes away</th>
+			</tr>
+
+		</table>
+	</div>
+	<div id="inputBox">
+		<form>
+			<label for="trainName">Train Name</label><br>
+			<input type="text" id="trainName"><br>
+
+			<label for="destination">Destination</label><br>
+			<input type="text" id="destination"><br>
+
+			<label for="firstTrainTime">First Train Time</label><br>
+			<input type="text" id="firstTrainTime"><br>
+
+			<label for="frequency">Frequency (minutes)</label><br>
+			<input type="text" id="frequency"><br>
+
+			<input id="addTrain" type="submit" value="submit">
+		</form>
+	</div>
+
+</div>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.13.0/moment.min.js"></script>
+<script src="https://code.jquery.com/jquery-2.2.1.min.js"></script>
+<script src="https://cdn.firebase.com/js/client/2.4.1/firebase.js"></script>
+<script type="text/javascript" src="assets/javascript/train.js"></script>
+
+</body>
+</html>
