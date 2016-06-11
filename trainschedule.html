@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!DOCTYPE html5>
 <html>
 <head>
 	<title>train schedule</title>
@@ -25,20 +25,20 @@
 		</table>
 	</div>
 	<div id="inputBox">
-		<form>
+		<form name="trainForm" onsubmit="return validateInputs()">
 			<label for="trainName">Train Name</label><br>
-			<input type="text" id="trainName"><br>
+			<input id="trainName" name="trainName" type="text" name="trainName"><br>
 
 			<label for="destination">Destination</label><br>
-			<input type="text" id="destination"><br>
+			<input id="destination" name="destination" type="text"><br>
 
-			<label for="firstTrainTime">First Train Time</label><br>
-			<input type="text" id="firstTrainTime"><br>
+			<label for="firstTrainTime">First Train Time (24 hour format, hhmm)</label><br>
+			<input id="firstTrainTime" type="text" name="firstTrainTime"  maxlength="4"><br>
 
 			<label for="frequency">Frequency (minutes)</label><br>
-			<input type="text" id="frequency"><br>
+			<input id="frequency" type="text"  name="frequency" maxlength="3" required><br>
 
-			<input id="addTrain" type="submit" value="Add Train">
+			<input id="addTrain" type="submit" value="Submit">
 		</form>
 	</div>
 

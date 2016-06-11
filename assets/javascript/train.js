@@ -52,11 +52,17 @@ trainInfo.on("child_added", function(childSnapshot){
 	var time = childSnapshot.val().time;
 	var frequency = childSnapshot.val().frequent;
 
-	//converst the first train time to a moment.js object
-	var firstTrain = moment('2016-06-10T' + time);
-
 	//captures the current time as a moment.js object
-	var currentTime = moment().format('HHmm');
+	var currentTime = moment();
+	
+	//uses the current time to create string with today's date (used below to make the first train time be on today date)
+	var dateString = currentTime.format().substring(0, 11);
+
+	//converts the first train time to a moment.js object
+	var firstTrain = moment(dateString + time);
+
+	//captures the current time and converts it to string 
+	var currentTimeToString = moment().format('HHmm');
 
 	//creates a data object to run through the loop
 	var loopTrain = moment(firstTrain).add(frequency, 'minutes');
@@ -65,18 +71,22 @@ trainInfo.on("child_added", function(childSnapshot){
 	var nextTrain = moment(loopTrain).format('HHmm');
 
 	//runs loop, adding frequency interval at every iteration until  the next train time is greater than the current time
-	while(parseInt(nextTrain) < parseInt(currentTime)){
+	while(parseInt(nextTrain) < parseInt(currentTimeToString)){
 		//updates the loop train object
 		loopTrain = moment(loopTrain).add(frequency, 'minutes');
 		//updates the next train string 
 		nextTrain = moment(loopTrain).format('HHmm');
 	}
-
+	
 	//determines how many minutes away the next train is at the time the page is loaded
-	var minutesAway = parseInt(nextTrain) - parseInt(currentTime);
+	var minutesAway = loopTrain.diff(currentTime, 'minutes') + 1;
+	//displays the next arrival in a more user friendly format
+	var displayNextTrain = moment(loopTrain).format('LT');
+	
 
-	$("#trainTable > tbody").append("<tr><td>" + trainName + "</td><td>" + destination + "</td><td>" + frequency + "</td><td>" + nextTrain + "</td><td>" + minutesAway + "</td></tr>");
+	$("#trainTable > tbody").append("<tr><td>" + trainName + "</td><td>" + destination + "</td><td>" + frequency + "</td><td>" + displayNextTrain + "</td><td>" + minutesAway + "</td></tr>");
 });
+
 
 
 
