@@ -11,13 +11,6 @@ setInterval(function(){
 	$("#timeRightNow").html(currentTime);	
 }, 1000);
 
-//function to conver the user input to a 24 hour clock format with a ":" (for use with moment())
-// function insertColon(s){
-// 	var firstHalf = s.substring(0, 2);
-// 	var secondHalf = s.substring(2, 4);
-// 	var full = firstHalf + ":" + secondHalf;
-// };
-
 //adds a new train from the user input
 $("#addTrain").on("click", function(){
 	//collects user inputs
@@ -26,10 +19,12 @@ $("#addTrain").on("click", function(){
 	var inputTime = $("#firstTrainTime").val().trim();
 	var frequency = parseInt($("#frequency").val().trim());
 
+	//converts the input time to a format that can be passed to moment
 	var firstHalf = inputTime.substring(0,2);
 	var secondHalf = inputTime.substring(2,4);
 	var time = firstHalf + ":" + secondHalf;
 
+	//creates data object to push to firebase
 	var newTrain = {
 		train: trainName,
 		destination: destination,
@@ -37,8 +32,10 @@ $("#addTrain").on("click", function(){
 		frequent: frequency
 	}
 
+	//pushes the data to firebase
 	trainInfo.push(newTrain);
 
+	//clears the input fields
 	$("#trainName").val("");
 	$("#destination").val("");
 	$("#firstTrainTime").val("");
@@ -49,33 +46,39 @@ $("#addTrain").on("click", function(){
 
 //displays the train info from firebase on the html 
 trainInfo.on("child_added", function(childSnapshot){
+	//collects the data from firebase
 	var trainName = childSnapshot.val().train;
 	var destination = childSnapshot.val().destination;
 	var time = childSnapshot.val().time;
 	var frequency = childSnapshot.val().frequent;
 
+	//converst the first train time to a moment.js object
 	var firstTrain = moment('2016-06-10T' + time);
+
+	//captures the current time as a moment.js object
 	var currentTime = moment().format('HHmm');
-	
-	var nextTrain = moment(firstTrain).add(frequency, 'minutes').format('HHmm');
-	console.log(firstTrain);
-	console.log(nextTrain);
-	
-	console.log(parseInt(currentTime));
 
-	// while(parseInt(nextTrain) < parseInt(currentTime)){
-	// 	var nextTrain = moment(nextTrain).add(frequency, 'minutes').format('HHmm')
-	// }
+	//creates a data object to run through the loop
+	var loopTrain = moment(firstTrain).add(frequency, 'minutes');
 
+	//converst the above object to string displaying time in 24 hour format
+	var nextTrain = moment(loopTrain).format('HHmm');
 
-	$("#trainTable > tbody").append("<tr><td>" + trainName + "</td><td>" + destination + "</td><td>" + frequency + "</td><td>" + nextTrain + "</td><td>" + "" + "</td></tr>");
+	//runs loop, adding frequency interval at every iteration until  the next train time is greater than the current time
+	while(parseInt(nextTrain) < parseInt(currentTime)){
+		//updates the loop train object
+		loopTrain = moment(loopTrain).add(frequency, 'minutes');
+		//updates the next train string 
+		nextTrain = moment(loopTrain).format('HHmm');
+	}
+
+	//determines how many minutes away the next train is at the time the page is loaded
+	var minutesAway = parseInt(nextTrain) - parseInt(currentTime);
+
+	$("#trainTable > tbody").append("<tr><td>" + trainName + "</td><td>" + destination + "</td><td>" + frequency + "</td><td>" + nextTrain + "</td><td>" + minutesAway + "</td></tr>");
 });
 
-// var exampleTime = "09:15";
-// var test = moment('2015-01-01T' + exampleTime);
-// console.log(test);
-// var exampleNextTrain = moment(test).add(5, 'minutes').format('HHmm');
-// console.log(exampleNextTrain);
+
 
 
 
